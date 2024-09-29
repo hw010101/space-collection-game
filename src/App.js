@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import WalletConnect from './WalletConnect';
 import Game from './Game';
@@ -14,7 +13,6 @@ const App = () => {
         <div>
             <h1>Space Planet Collection Game</h1>
             <WalletConnect onWalletConnected={handleWalletConnected} />
-            <p>Connected Wallet: {walletAddress || 'Not connected'}</p>
             <Game walletAddress={walletAddress} />
         </div>
     );

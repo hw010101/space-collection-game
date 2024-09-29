@@ -1,42 +1,19 @@
-.game-container {
+.game-area {
     text-align: center;
     position: relative;
-    height: 100vh; /* Full viewport height */
-    background-color: white; /* White background */
+    height: 500px; /* Adjust height as needed */
+    overflow: hidden;
+    background-color: white; /* Change to desired color */
 }
 
-.game-area {
-    width: 80%;
-    height: 400px; /* Height of the game area */
-    margin: 0 auto;
-    border: 2px solid black; /* Optional border for the game area */
-    position: relative;
-    overflow: hidden; /* Prevents overflow of planets */
+.planet-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .planet {
+    position: absolute;
     width: 50px; /* Adjust size as needed */
-    position: absolute;
-    animation: fall 5s linear forwards; /* Falling animation */
+    cursor: pointer;
 }
-
-@keyframes fall {
-    from {
-        top: -50px; /* Start above the game area */
-    }
-    to {
-        top: 400px; /* End at the bottom of the game area */
-    }
-}
-
-.controls {
-    margin-top: 20px;
-}
-
-.rocket {
-    position: absolute;
-    top: 20px; /* Adjust as needed */
-    right: 20px; /* Place on the right side */
-    width: 100px; /* Adjust size as needed */
-}
-
