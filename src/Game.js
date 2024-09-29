@@ -4,7 +4,6 @@ import planetImage from './images/planet.png';
 
 const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
-    const [isCollecting, setIsCollecting] = useState(false);
     const [timeLeft, setTimeLeft] = useState(30);
     const [planets, setPlanets] = useState([]);
 
@@ -50,27 +49,39 @@ const Game = ({ walletAddress }) => {
         setPlanets([]);
     };
 
+    const startGame = () => {
+        setScore(0);
+        setTimeLeft(30);
+        setPlanets([]);
+    };
+
     return (
         <div className="game-area">
-            <h1>Space Planet Collection Game</h1>
-            {walletAddress && <p>Connected Wallet: {walletAddress}</p>}
-            <p>Score: {score}</p>
-            <p>Time Left: {timeLeft}s</p>
-            <div className="planet-container">
-                {planets.map((planet) => (
-                    <img
-                        key={planet.id}
-                        src={planetImage}
-                        alt="Planet"
-                        className="planet"
-                        style={{
-                            left: `${planet.left}%`,
-                            top: `${planet.top}%`,
-                        }}
-                        onClick={() => handlePlanetClick(planet.id)}
-                    />
-                ))}
-            </div>
+            {walletAddress ? (
+                <>
+                    <p>Connected Wallet: {walletAddress}</p>
+                    <p>Score: {score}</p>
+                    <p>Time Left: {timeLeft}s</p>
+                    <button onClick={startGame}>Start Game</button>
+                    <div className="planet-container">
+                        {planets.map((planet) => (
+                            <img
+                                key={planet.id}
+                                src={planetImage}
+                                alt="Planet"
+                                className="planet"
+                                style={{
+                                    left: `${planet.left}%`,
+                                    top: `${planet.top}%`,
+                                }}
+                                onClick={() => handlePlanetClick(planet.id)}
+                            />
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <p>Please connect your wallet to start the game!</p>
+            )}
         </div>
     );
 };
