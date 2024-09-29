@@ -10,21 +10,29 @@ const Game = ({ walletAddress }) => {
 
     const startCollecting = () => {
         setIsCollecting(true);
-        const points = Math.floor(Math.random() * 100); // Example points
-        setScore((prevScore) => prevScore + points);
+        generatePlanets();
+        
+        setTimeout(() => {
+            setIsCollecting(false);
+        }, 30000); // 30 seconds
+    };
 
-        // Generate multiple new planets
+    const generatePlanets = () => {
         const newPlanets = Array.from({ length: 5 }, (_, index) => ({
             id: Date.now() + index,
-            points,
+            points: Math.floor(Math.random() * 10) + 1, // Points for each planet
             left: Math.random() * 100, // Random horizontal position
         }));
         setPlanets((prevPlanets) => [...prevPlanets, ...newPlanets]);
+    };
 
-        setTimeout(() => {
-            setIsCollecting(false);
-            alert(`Points collected: ${points}`);
-        }, 30000); // 30 seconds
+    const collectPlanet = (points, id) => {
+        setScore((prevScore) => prevScore + points);
+        setPlanets((prevPlanets) => prevPlanets.filter((planet) => planet.id !== id));
+        // Generate new planets if there are less than 5
+        if (planets.length < 5) {
+            generatePlanets();
+        }
     };
 
     const claimPoints = () => {
@@ -41,7 +49,8 @@ const Game = ({ walletAddress }) => {
                         src={planetImage} 
                         alt="Planet" 
                         className="planet" 
-                        style={{ left: `${planet.left}%` }} // Set horizontal position
+                        style={{ left: `${planet.left}%` }}
+                        onClick={() => collectPlanet(planet.points, planet.id)} // Collect planet on click
                     />
                 ))}
             </div>
