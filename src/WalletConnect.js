@@ -1,10 +1,20 @@
 import React from 'react';
+import { ethers } from 'ethers';
 
 const WalletConnect = ({ onWalletConnected }) => {
     const connectWallet = async () => {
-        // Your logic to connect the wallet here
-        const address = '0x1234567890abcdef'; // Replace with actual address from connection
-        onWalletConnected(address);
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts',
+                });
+                onWalletConnected(accounts[0]); // Get the first account
+            } catch (error) {
+                console.error("User rejected the request.");
+            }
+        } else {
+            alert('Please install MetaMask or another Ethereum wallet.');
+        }
     };
 
     return <button onClick={connectWallet}>Connect Wallet</button>;
