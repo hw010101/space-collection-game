@@ -1,24 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import rocketImage from './images/rocket.png'; // Rocket image
 import planetImage from './images/planet.png'; // Planet image
 
 const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(60); // 60 seconds
     const [isCollecting, setIsCollecting] = useState(false);
+    const [planets, setPlanets] = useState([]);
+
+    useEffect(() => {
+        let timer;
+        if (isCollecting && timeLeft > 0) {
+            timer = setInterval(() => {
+                setTimeLeft(prev => prev - 1);
+            }, 1000);
+        }
+        if (timeLeft === 0) {
+            setIsCollecting(false);
+            alert(`Time's up! Your score: ${score}`);
+        }
+        return () => clearInterval(timer);
+    }, [isCollecting, timeLeft]);
 
     const startCollecting = () => {
         setIsCollecting(true);
-        const points = Math.floor(Math.random() * 100); // Example points
-        setScore((prevScore) => prevScore + points);
+        setScore(0);
+        setTimeLeft(60);
+        generatePlanets();
+    };
 
-        setTimeout(() => {
-            setIsCollecting(false);
-            alert(`Points collected: ${points}`);
-        }, 30000); // 30 seconds
+    const generatePlanets = () => {
+        const newPlanets = [];
+        for (let i = 0; i < 5; i++) {
+            newPlanets.push({
+                id: i,
+                points: Math.floor(Math.random() * 100) + 1,
+                position: {
+                    x: Math.random() * 400,
+                    y: Math.random() * 400,
+                },
+            });
+        }
+        setPlanets(newPlanets);
+    };
+
+    const collectPlanet = (points) => {
+        setScore(prev => prev + points);
+        setPlanets(planets.filter(p => p.points !== points));
     };
 
     const claimPoints = () => {
-        // Here you can implement the logic to convert points to SRS tokens
         alert('Points claimed as SRS tokens!');
     };
 
@@ -29,11 +60,26 @@ const Game = ({ walletAddress }) => {
             {walletAddress ? (
                 <div>
                     <button onClick={startCollecting} disabled={isCollecting}>
-                        {isCollecting ? 'Collecting...' : 'Collect Planets'}
+                        {isCollecting ? 'Collecting...' : 'Start Game'}
                     </button>
                     <p>Score: {score}</p>
+                    <p>Time Left: {timeLeft}s</p>
                     <button onClick={claimPoints}>Claim Points</button>
-                    <img src={planetImage} alt="Planet" style={{ width: '100px', marginTop: '20px' }} />
+                    {planets.map(planet => (
+                        <img
+                            key={planet.id}
+                            src={planetImage}
+                            alt="Planet"
+                            style={{
+                                width: '50px',
+                                position: 'absolute',
+                                left: planet.position.x,
+                                top: planet.position.y,
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => collectPlanet(planet.points)}
+                        />
+                    ))}
                 </div>
             ) : (
                 <p>Please connect your wallet!</p>

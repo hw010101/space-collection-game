@@ -5,9 +5,15 @@ import Game from './Game';
 const App = () => {
     const [walletAddress, setWalletAddress] = useState('');
 
+    const connectWallet = () => {
+        // Simulate wallet connection
+        const mockAddress = '0x1234567890abcdef'; // Replace with actual wallet connection logic
+        setWalletAddress(mockAddress);
+    };
+
     return (
         <div>
-            <WalletConnect setWalletAddress={setWalletAddress} />
+            <WalletConnect onConnect={connectWallet} walletAddress={walletAddress} />
             <Game walletAddress={walletAddress} />
         </div>
     );
