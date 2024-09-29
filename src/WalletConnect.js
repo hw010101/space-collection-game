@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ethers } from 'ethers';
 
 const WalletConnect = ({ setWalletAddress }) => {
     const [error, setError] = useState('');
