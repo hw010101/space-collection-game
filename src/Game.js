@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import rocketImage from './images/rocket.png'; // Rocket image
-import planetImage from './images/planet.png'; // Planet image
-import './Game.css'; // Import the CSS file for additional styles
+import rocketImage from './images/rocket.png'; // Roket görseli
+import planetImage from './images/planet.png'; // Gezegen görseli
+import './Game.css'; // CSS dosyasını ekle
 
 const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(60); // 60 seconds
+    const [timeLeft, setTimeLeft] = useState(60);
     const [isCollecting, setIsCollecting] = useState(false);
     const [planets, setPlanets] = useState([]);
 
@@ -21,7 +21,7 @@ const Game = ({ walletAddress }) => {
             alert(`Time's up! Your score: ${score}`);
         }
         return () => clearInterval(timer);
-    }, [isCollecting, timeLeft]);
+    }, [isCollecting, timeLeft, score]); // Burada score'u ekle
 
     const startCollecting = () => {
         setIsCollecting(true);
@@ -48,7 +48,7 @@ const Game = ({ walletAddress }) => {
     const collectPlanet = (points) => {
         setScore(prev => prev + points);
         setPlanets(planets.filter(p => p.points !== points));
-        generatePlanets(); // Generate new planets after collecting
+        generatePlanets(); // Gezegen toplandıktan sonra yenilerini oluştur
     };
 
     const claimPoints = () => {
@@ -91,5 +91,4 @@ const Game = ({ walletAddress }) => {
 };
 
 export default Game;
-
 
