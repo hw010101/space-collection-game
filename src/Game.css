@@ -2,32 +2,31 @@
     text-align: center;
     position: relative;
     height: 100vh; /* Full viewport height */
-    background: url('./images/space-background.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background-color: white; /* White background */
 }
 
 .game-area {
     width: 80%;
     height: 400px; /* Height of the game area */
     margin: 0 auto;
-    border: 2px solid white; /* Optional border for the game area */
+    border: 2px solid black; /* Optional border for the game area */
     position: relative;
+    overflow: hidden; /* Prevents overflow of planets */
 }
 
 .planet {
     width: 50px; /* Adjust size as needed */
     position: absolute;
-    bottom: 0; /* Start at the bottom */
-    left: calc(Math.random() * 100%); /* Random horizontal position */
     animation: fall 5s linear forwards; /* Falling animation */
 }
 
 @keyframes fall {
     from {
-        bottom: 100%;
+        top: -50px; /* Start above the game area */
+        left: calc(Math.random() * 100%); /* Random horizontal position */
     }
     to {
-        bottom: 0;
+        top: 400px; /* End at the bottom of the game area */
     }
 }
 

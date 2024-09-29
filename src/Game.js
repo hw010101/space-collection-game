@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Game.css';
 import rocketImage from './images/rocket.png'; // Rocket image
 import planetImage from './images/planet.png'; // Planet image
