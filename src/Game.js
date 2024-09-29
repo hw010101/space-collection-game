@@ -33,7 +33,7 @@ const Game = ({ walletAddress }) => {
         const newPlanets = [];
         for (let i = 0; i < 5; i++) {
             newPlanets.push({
-                id: i,
+                id: Math.random(), // Use random ID for uniqueness
                 points: Math.floor(Math.random() * 100) + 1,
                 position: {
                     x: Math.random() * 400,
@@ -47,6 +47,7 @@ const Game = ({ walletAddress }) => {
     const collectPlanet = (points) => {
         setScore(prev => prev + points);
         setPlanets(planets.filter(p => p.points !== points));
+        generatePlanets(); // Generate new planets after collecting
     };
 
     const claimPoints = () => {
@@ -54,38 +55,42 @@ const Game = ({ walletAddress }) => {
     };
 
     return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-            <h1>Space Planet Collection Game</h1>
-            <img src={rocketImage} alt="Rocket" style={{ width: '150px', marginBottom: '20px' }} />
-            {walletAddress ? (
-                <div>
-                    <button onClick={startCollecting} disabled={isCollecting}>
-                        {isCollecting ? 'Collecting...' : 'Start Game'}
-                    </button>
-                    <p>Score: {score}</p>
-                    <p>Time Left: {timeLeft}s</p>
-                    <button onClick={claimPoints}>Claim Points</button>
-                    {planets.map(planet => (
-                        <img
-                            key={planet.id}
-                            src={planetImage}
-                            alt="Planet"
-                            style={{
-                                width: '50px',
-                                position: 'absolute',
-                                left: planet.position.x,
-                                top: planet.position.y,
-                                cursor: 'pointer',
-                            }}
-                            onClick={() => collectPlanet(planet.points)}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <p>Please connect your wallet!</p>
-            )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <div style={{ border: '2px solid #000', borderRadius: '10px', padding: '20px', position: 'relative', width: '500px', height: '500px', overflow: 'hidden' }}>
+                <h1>Space Planet Collection Game</h1>
+                <img src={rocketImage} alt="Rocket" style={{ width: '150px', marginBottom: '20px' }} />
+                {walletAddress ? (
+                    <div>
+                        <button onClick={startCollecting} disabled={isCollecting}>
+                            {isCollecting ? 'Collecting...' : 'Start Game'}
+                        </button>
+                        <p>Score: {score}</p>
+                        <p>Time Left: {timeLeft}s</p>
+                        <button onClick={claimPoints}>Claim Points</button>
+                        {planets.map(planet => (
+                            <img
+                                key={planet.id}
+                                src={planetImage}
+                                alt="Planet"
+                                style={{
+                                    width: '50px',
+                                    position: 'absolute',
+                                    left: planet.position.x,
+                                    top: planet.position.y,
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => collectPlanet(planet.points)}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <p>Please connect your wallet!</p>
+                )}
+            </div>
         </div>
     );
 };
 
 export default Game;
+
+
