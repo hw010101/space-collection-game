@@ -1,54 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import rocketImage from './images/rocket.png'; // Roket görseli
-import planetImage from './images/planet.png'; // Gezegen görseli
-import './Game.css'; // CSS dosyasını ekle
+import './Game.css';
+import rocketImage from './images/rocket.png'; // Rocket image
+import planetImage from './images/planet.png'; // Planet image
 
 const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(60);
     const [isCollecting, setIsCollecting] = useState(false);
     const [planets, setPlanets] = useState([]);
 
-    useEffect(() => {
-        let timer;
-        if (isCollecting && timeLeft > 0) {
-            timer = setInterval(() => {
-                setTimeLeft(prev => prev - 1);
-            }, 1000);
-        }
-        if (timeLeft === 0) {
-            setIsCollecting(false);
-            alert(`Time's up! Your score: ${score}`);
-        }
-        return () => clearInterval(timer);
-    }, [isCollecting, timeLeft, score]); // Burada score'u ekle
-
     const startCollecting = () => {
         setIsCollecting(true);
-        setScore(0);
-        setTimeLeft(60);
-        generatePlanets();
-    };
+        const points = Math.floor(Math.random() * 100); // Example points
+        setScore((prevScore) => prevScore + points);
 
-    const generatePlanets = () => {
-        const newPlanets = [];
-        for (let i = 0; i < 5; i++) {
-            newPlanets.push({
-                id: Math.random(),
-                points: Math.floor(Math.random() * 100) + 1,
-                position: {
-                    x: Math.random() * 400,
-                    y: Math.random() * 400,
-                },
-            });
-        }
-        setPlanets(newPlanets);
-    };
+        // Generate a new planet after collecting
+        const newPlanet = { id: Date.now(), points }; // Unique ID for each planet
+        setPlanets((prevPlanets) => [...prevPlanets, newPlanet]);
 
-    const collectPlanet = (points) => {
-        setScore(prev => prev + points);
-        setPlanets(planets.filter(p => p.points !== points));
-        generatePlanets(); // Gezegen toplandıktan sonra yenilerini oluştur
+        setTimeout(() => {
+            setIsCollecting(false);
+            alert(`Points collected: ${points}`);
+        }, 30000); // 30 seconds
     };
 
     const claimPoints = () => {
@@ -56,36 +28,25 @@ const Game = ({ walletAddress }) => {
     };
 
     return (
-        <div className="space-background">
-            <div className="game-container">
-                <img src={rocketImage} alt="Rocket" className="rocket" />
-                <h1>Space Planet Collection Game</h1>
-                {walletAddress ? (
-                    <div>
-                        <button onClick={startCollecting} disabled={isCollecting}>
-                            {isCollecting ? 'Collecting...' : 'Start Game'}
-                        </button>
-                        <p>Score: {score}</p>
-                        <p>Time Left: {timeLeft}s</p>
-                        <button onClick={claimPoints}>Claim Points</button>
-                        {planets.map(planet => (
-                            <img
-                                key={planet.id}
-                                src={planetImage}
-                                alt="Planet"
-                                className="planet"
-                                style={{
-                                    left: planet.position.x,
-                                    top: planet.position.y,
-                                }}
-                                onClick={() => collectPlanet(planet.points)}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <p>Please connect your wallet!</p>
-                )}
+        <div className="game-container">
+            <h1>Space Planet Collection Game</h1>
+            <div className="game-area">
+                {planets.map((planet) => (
+                    <img key={planet.id} src={planetImage} alt="Planet" className="planet" />
+                ))}
             </div>
+            {walletAddress ? (
+                <div className="controls">
+                    <button onClick={startCollecting} disabled={isCollecting}>
+                        {isCollecting ? 'Collecting...' : 'Collect Planets'}
+                    </button>
+                    <p>Score: {score}</p>
+                    <button onClick={claimPoints}>Claim Points</button>
+                </div>
+            ) : (
+                <p>Please connect your wallet!</p>
+            )}
+            <img src={rocketImage} alt="Rocket" className="rocket" />
         </div>
     );
 };

@@ -1,29 +1,43 @@
-.space-background {
+.game-container {
+    text-align: center;
+    position: relative;
+    height: 100vh; /* Full viewport height */
     background: url('./images/space-background.jpg') no-repeat center center fixed;
     background-size: cover;
-    height: 100vh;
 }
 
-.game-container {
-    position: relative;
-    width: 500px;
-    height: 500px;
+.game-area {
+    width: 80%;
+    height: 400px; /* Height of the game area */
     margin: 0 auto;
-    border: 2px solid white;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid white; /* Optional border for the game area */
+    position: relative;
+}
+
+.planet {
+    width: 50px; /* Adjust size as needed */
+    position: absolute;
+    bottom: 0; /* Start at the bottom */
+    left: calc(Math.random() * 100%); /* Random horizontal position */
+    animation: fall 5s linear forwards; /* Falling animation */
+}
+
+@keyframes fall {
+    from {
+        bottom: 100%;
+    }
+    to {
+        bottom: 0;
+    }
+}
+
+.controls {
+    margin-top: 20px;
 }
 
 .rocket {
     position: absolute;
-    top: -50px; /* Rocket üstte görünmesi için */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-}
-
-.planet {
-    position: absolute;
-    width: 50px;
-    cursor: pointer;
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Place on the right side */
+    width: 100px; /* Adjust size as needed */
 }
