@@ -7,6 +7,7 @@ const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
     const [isCollecting, setIsCollecting] = useState(false);
     const [planets, setPlanets] = useState([]);
+    const [timer, setTimer] = useState(30);
     const [showWalletAddress, setShowWalletAddress] = useState('');
 
     useEffect(() => {
@@ -15,32 +16,39 @@ const Game = ({ walletAddress }) => {
         }
     }, [walletAddress]);
 
+    useEffect(() => {
+        let interval;
+        if (isCollecting && timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+        } else if (timer === 0) {
+            setIsCollecting(false);
+            alert('Time is up! Your final score is: ' + score);
+        }
+        return () => clearInterval(interval);
+    }, [isCollecting, timer]);
+
     const startCollecting = () => {
         setIsCollecting(true);
+        setScore(0);
+        setTimer(30);
         generatePlanets();
-
-        setTimeout(() => {
-            setIsCollecting(false);
-        }, 30000); // 30 seconds
     };
 
     const generatePlanets = () => {
-        const newPlanets = Array.from({ length: 5 }, (_, index) => ({
-            id: Date.now() + index,
-            points: Math.floor(Math.random() * 10) + 1, // Points for each planet
-            left: Math.random() * 90, // Random horizontal position (90 to fit in screen)
-        }));
-        setPlanets((prevPlanets) => [...prevPlanets, ...newPlanets]);
+        const newPlanet = {
+            id: Date.now(),
+            points: Math.floor(Math.random() * 10) + 1, // Random points for each planet
+            left: Math.random() * 90, // Random horizontal position
+        };
+        setPlanets((prevPlanets) => [...prevPlanets, newPlanet]);
     };
 
     const collectPlanet = (points, id) => {
         setScore((prevScore) => prevScore + points);
         setPlanets((prevPlanets) => prevPlanets.filter((planet) => planet.id !== id));
-
-        // Generate new planets if there are less than 5
-        if (planets.length <= 5) {
-            generatePlanets();
-        }
+        generatePlanets(); // Generate a new planet after collecting one
     };
 
     const claimPoints = () => {
@@ -63,21 +71,23 @@ const Game = ({ walletAddress }) => {
                     />
                 ))}
             </div>
+            <div className="controls">
+                <button onClick={startCollecting} disabled={isCollecting}>
+                    {isCollecting ? 'Collecting...' : 'Start Collecting'}
+                </button>
+                <p>Score: {score}</p>
+                <p>Time Remaining: {timer}s</p>
+                <button onClick={claimPoints}>Claim Points</button>
+            </div>
             {walletAddress ? (
-                <div className="controls">
-                    <button onClick={startCollecting} disabled={isCollecting}>
-                        {isCollecting ? 'Collecting...' : 'Collect Planets'}
-                    </button>
-                    <p>Score: {score}</p>
-                    <button onClick={claimPoints}>Claim Points</button>
-                </div>
+                <img src={rocketImage} alt="Rocket" className="rocket" style={{ position: 'absolute', right: '10px', top: '0' }} />
             ) : (
                 <p>Please connect your wallet!</p>
             )}
-            <img src={rocketImage} alt="Rocket" className="rocket" style={{ position: 'absolute', right: '10px', top: '0' }} />
         </div>
     );
 };
 
 export default Game;
+
 
