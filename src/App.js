@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import WalletConnect from './WalletConnect';
 import Game from './Game';
@@ -5,15 +6,15 @@ import Game from './Game';
 const App = () => {
     const [walletAddress, setWalletAddress] = useState('');
 
-    const connectWallet = () => {
-        // Simulate wallet connection
-        const mockAddress = '0x1234567890abcdef'; // Replace with actual wallet connection logic
-        setWalletAddress(mockAddress);
+    const handleWalletConnected = (address) => {
+        setWalletAddress(address);
     };
 
     return (
         <div>
-            <WalletConnect onConnect={connectWallet} walletAddress={walletAddress} />
+            <h1>Space Planet Collection Game</h1>
+            <WalletConnect onWalletConnected={handleWalletConnected} />
+            <p>Connected Wallet: {walletAddress || 'Not connected'}</p>
             <Game walletAddress={walletAddress} />
         </div>
     );
