@@ -7,11 +7,18 @@ const Game = ({ walletAddress }) => {
     const [score, setScore] = useState(0);
     const [isCollecting, setIsCollecting] = useState(false);
     const [planets, setPlanets] = useState([]);
+    const [showWalletAddress, setShowWalletAddress] = useState('');
+
+    useEffect(() => {
+        if (walletAddress) {
+            setShowWalletAddress(walletAddress);
+        }
+    }, [walletAddress]);
 
     const startCollecting = () => {
         setIsCollecting(true);
         generatePlanets();
-        
+
         setTimeout(() => {
             setIsCollecting(false);
         }, 30000); // 30 seconds
@@ -21,7 +28,7 @@ const Game = ({ walletAddress }) => {
         const newPlanets = Array.from({ length: 5 }, (_, index) => ({
             id: Date.now() + index,
             points: Math.floor(Math.random() * 10) + 1, // Points for each planet
-            left: Math.random() * 100, // Random horizontal position
+            left: Math.random() * 90, // Random horizontal position (90 to fit in screen)
         }));
         setPlanets((prevPlanets) => [...prevPlanets, ...newPlanets]);
     };
@@ -29,8 +36,9 @@ const Game = ({ walletAddress }) => {
     const collectPlanet = (points, id) => {
         setScore((prevScore) => prevScore + points);
         setPlanets((prevPlanets) => prevPlanets.filter((planet) => planet.id !== id));
+
         // Generate new planets if there are less than 5
-        if (planets.length < 5) {
+        if (planets.length <= 5) {
             generatePlanets();
         }
     };
@@ -42,6 +50,7 @@ const Game = ({ walletAddress }) => {
     return (
         <div className="game-container">
             <h1>Space Planet Collection Game</h1>
+            {showWalletAddress && <p>Connected Wallet: {showWalletAddress}</p>}
             <div className="game-area">
                 {planets.map((planet) => (
                     <img 
@@ -49,7 +58,7 @@ const Game = ({ walletAddress }) => {
                         src={planetImage} 
                         alt="Planet" 
                         className="planet" 
-                        style={{ left: `${planet.left}%` }}
+                        style={{ left: `${planet.left}%`, position: 'absolute', top: '0%' }}
                         onClick={() => collectPlanet(planet.points, planet.id)} // Collect planet on click
                     />
                 ))}
@@ -65,7 +74,7 @@ const Game = ({ walletAddress }) => {
             ) : (
                 <p>Please connect your wallet!</p>
             )}
-            <img src={rocketImage} alt="Rocket" className="rocket" />
+            <img src={rocketImage} alt="Rocket" className="rocket" style={{ position: 'absolute', right: '10px', top: '0' }} />
         </div>
     );
 };
