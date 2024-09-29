@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Game.css';
 import rocketImage from './images/rocket.png'; // Rocket image
 import planetImage from './images/planet.png'; // Planet image
@@ -13,9 +13,13 @@ const Game = ({ walletAddress }) => {
         const points = Math.floor(Math.random() * 100); // Example points
         setScore((prevScore) => prevScore + points);
 
-        // Generate a new planet after collecting
-        const newPlanet = { id: Date.now(), points }; // Unique ID for each planet
-        setPlanets((prevPlanets) => [...prevPlanets, newPlanet]);
+        // Generate multiple new planets
+        const newPlanets = Array.from({ length: 5 }, (_, index) => ({
+            id: Date.now() + index,
+            points,
+            left: Math.random() * 100, // Random horizontal position
+        }));
+        setPlanets((prevPlanets) => [...prevPlanets, ...newPlanets]);
 
         setTimeout(() => {
             setIsCollecting(false);
@@ -32,7 +36,13 @@ const Game = ({ walletAddress }) => {
             <h1>Space Planet Collection Game</h1>
             <div className="game-area">
                 {planets.map((planet) => (
-                    <img key={planet.id} src={planetImage} alt="Planet" className="planet" />
+                    <img 
+                        key={planet.id} 
+                        src={planetImage} 
+                        alt="Planet" 
+                        className="planet" 
+                        style={{ left: `${planet.left}%` }} // Set horizontal position
+                    />
                 ))}
             </div>
             {walletAddress ? (

@@ -23,7 +23,6 @@
 @keyframes fall {
     from {
         top: -50px; /* Start above the game area */
-        left: calc(Math.random() * 100%); /* Random horizontal position */
     }
     to {
         top: 400px; /* End at the bottom of the game area */
@@ -40,3 +39,4 @@
     right: 20px; /* Place on the right side */
     width: 100px; /* Adjust size as needed */
 }
+
